@@ -1,0 +1,3 @@
+[submodule "api/yolov5"]
+	path = api/yolov5
+	url = https://github.com/ultralytics/yolov5.git
