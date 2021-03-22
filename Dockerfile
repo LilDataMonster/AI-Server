@@ -1,7 +1,7 @@
 FROM python:3.9-slim-buster
 
 RUN apt-get update -y && \
-    apt-get install -y ffmpeg libsm6 libxext6 \
+    apt-get install -y build-essential git ffmpeg libsm6 libxext6 \
 	tesseract-ocr libtesseract-dev
 
 WORKDIR /app
