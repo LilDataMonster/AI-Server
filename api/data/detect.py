@@ -34,10 +34,10 @@ def detect_yolov5(images):
                 conf = detection[4]
                 label = names[int(detection[5])]
                 r = {
-                    'xy0': xy0,
-                    'xy1': xy1,
                     'conf': conf,
-                    'label': label
+                    'label': label,
+                    'xy0': xy0,
+                    'xy1': xy1
                 }
                 image_detections.append(r)
 
