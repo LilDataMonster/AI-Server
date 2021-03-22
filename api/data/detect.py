@@ -28,7 +28,6 @@ def detect_yolov5(images):
             # detection info
             image_detections = []
             for detection in det:
-                print(detection)
                 xy0 = detection[0:2]
                 xy1 = detection[2:4]
                 conf = detection[4]
@@ -57,4 +56,4 @@ def detect_yolov5(images):
         'inference_time_sec': t1 - t0,
         'detection_summary': det_str,
         'detections': detection_results
-    }
+    }, result_imgs

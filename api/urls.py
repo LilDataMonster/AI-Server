@@ -4,7 +4,8 @@ from api import views
 
 
 urlpatterns = [
-    path('api/v1/', views.YoloV5UploadView.as_view()),
+    path('yolov5/image', views.YoloV5UploadImageView.as_view()),
+    path('yolov5/metadata', views.YoloV5UploadMetadataView.as_view()),
     # path('snippets/<int:pk>/', views.SnippetDetail.as_view()),
 ]
 
