@@ -3,7 +3,7 @@ from PIL import Image
 import torch
 
 
-def detect_yolov5(images):
+def detect(images):
     # Model
     model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
     names = model.names

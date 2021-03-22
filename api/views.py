@@ -6,7 +6,7 @@ from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from api.data.detect import detect_yolov5
+from api.data.yolov5 import detect
 
 
 class ImageUploadParser(FileUploadParser):
@@ -33,7 +33,7 @@ class YoloV5UploadImageView(APIView):
         # img = Image.open(file)
 
         images = [file.temporary_file_path()]
-        data_response, output_images = detect_yolov5(images)
+        data_response, output_images = detect(images)
 
         # print(f'There are {len(output_images)} generated images')
         # # for output in output_images:
@@ -58,5 +58,5 @@ class YoloV5UploadMetadataView(APIView):
     def post(self, request, format=None):
         file = request.data['file']
         images = [file.temporary_file_path()]
-        data_response, output_images = detect_yolov5(images)
+        data_response, output_images = detect(images)
         return Response(data_response)
