@@ -4,6 +4,8 @@ from api import views
 
 
 urlpatterns = [
+    path('legos/image', views.LegoUploadImageView.as_view()),
+    path('legos/metadata', views.LegoUploadMetadataView.as_view()),
     path('yolov5/image', views.YoloV5UploadImageView.as_view()),
     path('yolov5/metadata', views.YoloV5UploadMetadataView.as_view()),
     path('tesseract/image', views.TesseractUploadImageView.as_view()),
