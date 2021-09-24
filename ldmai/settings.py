@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 import os
+import urllib
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -129,3 +130,11 @@ STATIC_URL = '/static/'
 
 # https://stackoverflow.com/questions/59427722/error-reading-an-uploaded-csv-using-dask-in-django-inmemoryuploadedfile-objec
 FILE_UPLOAD_HANDLERS = ['django.core.files.uploadhandler.TemporaryFileUploadHandler',]
+
+# check and download weights
+lego_path = os.environ['LEGO_WEIGHTS_PATH'] if 'LEGO_WEIGHTS_PATH' in os.environ else os.path.join(BASE_DIR, 'api', 'data', 'weights')
+lego_file = os.environ['LEGO_WEIGHTS_FILE'] if 'LEGO_WEIGHTS_FILE' in os.environ else 'mask_rcnn_lego_0040.h5'
+lego_weights_path = os.path.join(lego_path, lego_file)
+1if not Path(lego_weights_path).is_file():
+    default_download_location = 'https://github.com/LilDataMonster/Lego-CNN/releases/latest/download/mask_rcnn_lego_0040.h5'
+    urllib.request.urlretrieve(default_download_location, lego_weights_path)

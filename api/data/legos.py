@@ -199,19 +199,8 @@ def detect(images):
 
     config = InferenceConfig()
 
-    lego_path = os.environ['LEGO_WEIGHTS_PATH'] if 'LEGO_WEIGHTS_PATH' in os.environ else None
-    if lego_path is None or not Path().is_file():
-        logger.error(f'Weights not found: {lego_path}')
-        return {}, []
-
     # class labels
     names = ['BG', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13']
-
-    logger.info(f'Loading Weights: {lego_path}')
-    # print(f'BASE_DIR: {settings.BASE_DIR}')
-    # print(f'Loading MODEL_DIR: {MODEL_DIR}')
-    # print(f'Loading Weights: {LEGO_WEIGHTS_PATH}')
-    # print(images)
 
     # load binary images
     images = [cv2.cvtColor(cv2.imread(image), cv2.COLOR_BGR2RGB) for image in images]
@@ -219,7 +208,7 @@ def detect(images):
 
     # Model
     model = modellib.MaskRCNN(mode="inference", model_dir="", config=config)
-    model.load_weights(lego_path, by_name=True)
+    model.load_weights(settings.lego_weights_path, by_name=True)
 
     # Inference
     t0 = time.monotonic()
