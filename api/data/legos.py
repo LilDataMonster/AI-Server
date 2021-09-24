@@ -208,7 +208,7 @@ def detect(images):
 
     # Model
     model = modellib.MaskRCNN(mode="inference", model_dir="", config=config)
-    model.load_weights(settings.lego_weights_path, by_name=True)
+    model.load_weights(settings.LEGO_WEIGHTS_PATH, by_name=True)
 
     # Inference
     t0 = time.monotonic()

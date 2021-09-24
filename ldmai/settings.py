@@ -173,20 +173,20 @@ FILE_UPLOAD_HANDLERS = ['django.core.files.uploadhandler.TemporaryFileUploadHand
 logger = logging.getLogger("settings")
 lego_path = os.environ['LEGO_WEIGHTS_PATH'] if 'LEGO_WEIGHTS_PATH' in os.environ else os.path.join(BASE_DIR, 'api', 'data', 'weights')
 lego_file = os.environ['LEGO_WEIGHTS_FILE'] if 'LEGO_WEIGHTS_FILE' in os.environ else 'mask_rcnn_lego_0040.h5'
-lego_weights_path = Path(os.path.join(lego_path, lego_file))
+LEGO_WEIGHTS_PATH = Path(os.path.join(lego_path, lego_file))
 
 # download and check size
 default_download_location = 'https://github.com/LilDataMonster/Lego-CNN/releases/latest/download/mask_rcnn_lego_0040.h5'
 response = requests.get(default_download_location, stream=True)
 total_size_in_bytes = int(response.headers.get('content-length', 0))
-if not lego_weights_path.is_file() or lego_weights_path.stat().st_size != total_size_in_bytes:
+if not LEGO_WEIGHTS_PATH.is_file() or LEGO_WEIGHTS_PATH.stat().st_size != total_size_in_bytes:
     logger.info(f'Lego weights not found/partially downloaded... re-downloading weights...')
     print(f'Lego weights not found/partially downloaded... re-downloading weights...')
 
     # Streaming, so we can iterate over the response.
     block_size = 1024  # 1 Kibibyte
     progress_bar = tqdm(total=total_size_in_bytes, unit='iB', unit_scale=True)
-    with open(lego_weights_path, 'wb') as file:
+    with open(LEGO_WEIGHTS_PATH, 'wb') as file:
         for data in response.iter_content(block_size):
             progress_bar.update(len(data))
             file.write(data)
