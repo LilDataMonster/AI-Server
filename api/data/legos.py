@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 from PIL import Image
+from pathlib import Path
 
 from api.data.networks.mrcnn import model as modellib
 from api.data.networks.mrcnn.config import Config
@@ -198,12 +199,15 @@ def detect(images):
 
     config = InferenceConfig()
 
-    MODEL_DIR = os.path.join(settings.BASE_DIR, 'logs')
-    LEGO_WEIGHTS_PATH = os.path.join(settings.BASE_DIR, "mask_rcnn_lego_0040.h5")
+    lego_path = os.environ['LEGO_WEIGHTS_PATH'] if 'LEGO_WEIGHTS_PATH' in os.environ else None
+    if lego_path is None or not Path().is_file():
+        logger.error(f'Weights not found: {lego_path}')
+        return {}, []
+
+    # class labels
     names = ['BG', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13']
 
-    logger.info(f'Loading MODEL_DIR: {MODEL_DIR}')
-    logger.info(f'Loading Weights: {LEGO_WEIGHTS_PATH}')
+    logger.info(f'Loading Weights: {lego_path}')
     # print(f'BASE_DIR: {settings.BASE_DIR}')
     # print(f'Loading MODEL_DIR: {MODEL_DIR}')
     # print(f'Loading Weights: {LEGO_WEIGHTS_PATH}')
@@ -214,8 +218,8 @@ def detect(images):
     print(f'Image shape: {np.shape(images)}')
 
     # Model
-    model = modellib.MaskRCNN(mode="inference", model_dir=MODEL_DIR, config=config)
-    model.load_weights(LEGO_WEIGHTS_PATH, by_name=True)
+    model = modellib.MaskRCNN(mode="inference", model_dir="", config=config)
+    model.load_weights(lego_path, by_name=True)
 
     # Inference
     t0 = time.monotonic()
