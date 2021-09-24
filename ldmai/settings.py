@@ -135,6 +135,6 @@ FILE_UPLOAD_HANDLERS = ['django.core.files.uploadhandler.TemporaryFileUploadHand
 lego_path = os.environ['LEGO_WEIGHTS_PATH'] if 'LEGO_WEIGHTS_PATH' in os.environ else os.path.join(BASE_DIR, 'api', 'data', 'weights')
 lego_file = os.environ['LEGO_WEIGHTS_FILE'] if 'LEGO_WEIGHTS_FILE' in os.environ else 'mask_rcnn_lego_0040.h5'
 lego_weights_path = os.path.join(lego_path, lego_file)
-1if not Path(lego_weights_path).is_file():
+if not Path(lego_weights_path).is_file():
     default_download_location = 'https://github.com/LilDataMonster/Lego-CNN/releases/latest/download/mask_rcnn_lego_0040.h5'
     urllib.request.urlretrieve(default_download_location, lego_weights_path)
