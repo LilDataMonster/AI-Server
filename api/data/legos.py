@@ -7,8 +7,10 @@ import cv2
 from PIL import Image
 
 # from .lego_cnn import lego
-from .lego_cnn.mrcnn.config import Config
-from api.data.lego_cnn.mrcnn import model as modellib, visualize
+# from .lego_cnn.mrcnn.config import Config
+# from api.data.lego_cnn.mrcnn import model as modellib, visualize
+from api.data.networks.mrcnn import model as modellib
+from api.data.networks.mrcnn.config import Config
 
 import logging
 from django.conf import settings
@@ -188,24 +190,15 @@ class LegoConfig(Config):
     USE_MINI_MASK = False
 
 
-def get_ax(rows=1, cols=1, size=16):
-    """Return a Matplotlib Axes array to be used in
-    all visualizations in the notebook. Provide a
-    central point to control graph sizes.
-
-    Adjust the size attribute to control how big to render images
-    """
-    _, ax = plt.subplots(rows, cols, figsize=(size * cols, size * rows))
-    return ax
-
-
 def detect(images):
     logger = logging.getLogger(__name__)
     config = LegoConfig()
+
     class InferenceConfig(config.__class__):
         # Run detection on one image at a time
         GPU_COUNT = 1
         IMAGES_PER_GPU = 1
+
     config = InferenceConfig()
 
     MODEL_DIR = os.path.join(settings.BASE_DIR, 'logs')
@@ -264,117 +257,8 @@ def detect(images):
         result_img = display_results(image, detection['rois'], detection['masks'], detection['class_ids'], names, detection['scores'])
         result_imgs.append(Image.fromarray(result_img))
 
-        # generate image array results
-        # plt.figure()
-        # ax = get_ax(1)
-        # visualize.display_instances(image, detection['rois'], detection['masks'], detection['class_ids'], names,
-        #                             detection['scores'], ax=ax)
-
-        # plt.savefig(f'test_{image_name}.png', bbox_inches='tight', pad_inches=-0.5, orientation='landscape')
-        # result_imgs.append(Image.fromarray(result))
-
-        # io_buf = io.BytesIO()
-        # ax.savefig(io_buf, format='raw')
-        # io_buf.seek(0)
-        # img_arr = np.reshape(np.frombuffer(io_buf.getvalue(), dtype=np.uint8),
-        #                      newshape=(int(ax.bbox.bounds[3]), int(fig.bbox.bounds[2]), -1))
-        # io_buf.close()
-
-    # # generate image array results
-    # for result in results.render():
-    #     result_imgs.append(Image.fromarray(result))
-
     return {
         'inference_time_sec': t1 - t0,
         'detection_summary': det_str,
         'detections': detection_results
     }, result_imgs
-
-
-
-
-
-'''
-    # Model
-    model = modellib.MaskRCNN(mode="inference", model_dir=MODEL_DIR, config=config)
-    model.load_weights(LEGO_WEIGHTS_PATH, by_name=True)
-
-    # image
-    image = cv2.imread(os.path.join(test_images_path, image_name))
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-    # inference
-    t0 = time.monotonic()
-    results = model.detect([image], verbose=0)
-    t1 = time.monotonic()
-    r = results[0]
-
-    plt.figure()
-    ax = get_ax(1)
-    visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'], names, r['scores'], ax=ax)
-    plt.savefig(f'output_image.png', bbox_inches='tight', pad_inches=-0.5, orientation='landscape')
-
-    return {
-        'inference_time_sec': t1 - t0,
-        'detection_summary': det_str,
-        'detections': detection_results
-    }, result_imgs
-'''
-
-
-
-'''
-    # Model
-    model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
-    names = model.names
-
-    # # Images
-    # dir = 'https://github.com/ultralytics/yolov5/raw/master/data/images/'
-    # imgs = [dir + f for f in ('zidane.jpg', 'bus.jpg')]  # batch of images
-    # imgs = [path]
-    # print(f'Images: {imgs}')
-
-    # Inference
-    t0 = time.monotonic()
-    results = model(images)
-    t1 = time.monotonic()
-
-    pred = results.pred
-    det_str = ''
-    detection_results = []
-    for i, det in enumerate(pred):
-        image_detections = []
-        if len(det):  # if detections found
-            # detection info
-            image_detections = []
-            for detection in det:
-                xy0 = detection[0:2]
-                xy1 = detection[2:4]
-                conf = detection[4]
-                label = names[int(detection[5])]
-                r = {
-                    'conf': conf,
-                    'label': label,
-                    'xy0': xy0,
-                    'xy1': xy1
-                }
-                image_detections.append(r)
-
-            # detection summary
-            for c in det[:, -1].unique():
-                n = (det[:, -1] == c).sum()  # detections per class
-                det_str += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
-
-        detection_results.append(image_detections)
-
-    # generate image array results
-    result_imgs = []
-    for result in results.render():
-        result_imgs.append(Image.fromarray(result))
-
-    return {
-        'inference_time_sec': t1 - t0,
-        'detection_summary': det_str,
-        'detections': detection_results
-    }, result_imgs
-'''

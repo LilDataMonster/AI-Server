@@ -1,3 +1,0 @@
-[submodule "api/data/lego_cnn"]
-	path = api/data/lego_cnn
-	url = https://github.com/LilDataMonster/Lego-CNN.git
