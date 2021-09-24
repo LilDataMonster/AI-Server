@@ -6,9 +6,6 @@ import numpy as np
 import cv2
 from PIL import Image
 
-# from .lego_cnn import lego
-# from .lego_cnn.mrcnn.config import Config
-# from api.data.lego_cnn.mrcnn import model as modellib, visualize
 from api.data.networks.mrcnn import model as modellib
 from api.data.networks.mrcnn.config import Config
 
